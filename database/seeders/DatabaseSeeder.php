@@ -13,19 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Seed roles first
         $this->call(RoleSeeder::class);
 
-        // User::factory(10)->create();
-
-        $adminRole = \App\Models\Role::where('name', 'admin')->first();
-
-        \App\Models\User::firstOrCreate(
-            ['email' => 'admin@bonilms.com'],
-            [
-                'name' => 'Admin User',
-                'password' => bcrypt('password'),
-                'role_id' => $adminRole->id,
-            ]
-        );
+        // Seed users with appropriate roles
+        $this->call(UserSeeder::class);
     }
 }

@@ -13,7 +13,17 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Poppins', 'Inter', ...defaultTheme.fontFamily.sans],
+            },
+            colors: {
+                primary: {
+                    blue: '#2563eb',
+                    green: '#16a34a',
+                },
+                secondary: {
+                    blue: '#3b82f6',
+                    green: '#22c55e',
+                }
             },
         },
     },

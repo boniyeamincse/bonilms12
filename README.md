@@ -38,6 +38,174 @@ Boni LMS provides the following features:
 
 Boni LMS is accessible, powerful, and provides tools required for large, robust online academies.
 
+## Installation
+
+### Prerequisites
+- PHP 8.1 or higher
+- Node.js & npm
+- Composer
+- MySQL or PostgreSQL database
+
+### Setup Instructions
+
+1. **Clone the repository:**
+```bash
+git clone https://github.com/your-username/bonilms.git
+cd bonilms
+```
+
+2. **Install PHP dependencies:**
+```bash
+composer install
+```
+
+3. **Install Node.js dependencies:**
+```bash
+npm install
+```
+
+4. **Environment Setup:**
+```bash
+cp .env.example .env
+```
+
+Edit the `.env` file with your database credentials and other settings:
+```env
+APP_NAME="BoniLMS"
+APP_ENV=local
+APP_KEY=
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=bonilms
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
+```
+
+5. **Generate application key:**
+```bash
+php artisan key:generate
+```
+
+6. **Run database migrations:**
+```bash
+php artisan migrate
+```
+
+7. **Seed the database:**
+```bash
+php artisan db:seed
+```
+
+8. **Build assets:**
+```bash
+npm run build
+```
+
+9. **Start the development server:**
+```bash
+php artisan serve
+```
+
+Visit `http://localhost:8000` to access your BoniLMS application.
+
+## Supported Languages
+
+BoniLMS currently supports two languages:
+- **English (EN)** - Default language
+- **Bangla (BN)** - Bengali language support
+
+The language switcher is available in the header navigation for easy switching between languages.
+
+## User Roles & Authentication
+
+BoniLMS includes three user roles with different permissions. The following table shows the default user accounts available for testing:
+
+| User Type | Email | Password | Role ID | Capabilities |
+|-----------|-------|----------|---------|--------------|
+| **Admin** | `admin@bonilms.com` | `password` | 1 | Full system access, user management, course management, analytics |
+| **Instructor** | `instructor@bonilms.com` | `password` | 2 | Course creation, content upload, student management, earnings |
+| **Student** | `student@bonilms.com` | `password` | 3 | Course enrollment, learning progress, reviews, quizzes |
+
+### User Roles Table
+
+| Role Name | Role ID | Description | Database Table: `roles` |
+|-----------|---------|-------------|-------------------------|
+| **admin** | 1 | Administrator with full access | `roles` table stores role definitions |
+| **instructor** | 2 | Course instructor and content creator | `users.role_id` references this |
+| **student** | 3 | Course learner and student | Role-based access control |
+
+### Database Users Table Structure
+
+The `users` table includes role-based authentication:
+
+```sql
+users:
+- id (Primary Key)
+- name (User's full name)
+- email (Unique email address)
+- password (Hashed password)
+- role_id (Foreign Key → roles.id)
+- email_verified_at (Email verification timestamp)
+- created_at, updated_at (Timestamps)
+```
+
+### Sample Users Created by Seeders
+
+| Name | Email | Role | Status |
+|------|-------|------|--------|
+| BoniLMS Admin | admin@bonilms.com | Admin | Active |
+| John Instructor | instructor@bonilms.com | Instructor | Active |
+| Sarah Student | student@bonilms.com | Student | Active |
+| Dr. Maria Rodriguez | maria@instructor.com | Instructor | Active |
+| Prof. Ahmed Hassan | ahmed@instructor.com | Instructor | Active |
+| Lisa Chen | lisa@instructor.com | Instructor | Active |
+| Alex Johnson | alex@student.com | Student | Active |
+| Emma Wilson | emma@student.com | Student | Active |
+| Carlos Martinez | carlos@student.com | Student | Active |
+| Priya Sharma | priya@student.com | Student | Active |
+| David Lee | david@student.com | Student | Active |
+
+### Creating Additional Users
+
+To create users with specific roles, use the following commands:
+
+**Create Admin User:**
+```bash
+php artisan tinker
+```
+```php
+\App\Models\User::create([
+    'name' => 'Your Name',
+    'email' => 'your@email.com',
+    'password' => bcrypt('yourpassword'),
+    'email_verified_at' => now(),
+])->assignRole('admin');
+```
+
+**Create Instructor User:**
+```php
+\App\Models\User::create([
+    'name' => 'Instructor Name',
+    'email' => 'instructor@email.com',
+    'password' => bcrypt('password'),
+    'email_verified_at' => now(),
+])->assignRole('instructor');
+```
+
+**Create Student User:**
+```php
+\App\Models\User::create([
+    'name' => 'Student Name',
+    'email' => 'student@email.com',
+    'password' => bcrypt('password'),
+    'email_verified_at' => now(),
+])->assignRole('student');
+```
+
 ## Learning Boni LMS
 
 Boni LMS has comprehensive documentation and tutorials to get started quickly.
