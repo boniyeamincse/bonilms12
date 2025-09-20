@@ -18,5 +18,8 @@ class DatabaseSeeder extends Seeder
 
         // Seed users with appropriate roles
         $this->call(UserSeeder::class);
+
+        // Seed test data
+        $this->call(TestDataSeeder::class);
     }
 }
