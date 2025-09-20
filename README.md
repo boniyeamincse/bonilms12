@@ -7,27 +7,46 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+## About Boni LMS
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Boni Security LMS is a powerful and easy-to-use Learning Management System built on Laravel v12. It is designed for schools, coaching centers, individual instructors, and academies to create, manage, and sell courses online without coding.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Boni LMS provides the following features:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Intuitive Drag & Drop Course Builder
+- Unlimited Categories & Subcategories
+- Smart Installation Wizard
+- Drip Content (scheduled release of lessons)
+- Course Preview before purchase
+- Social Login (Google, Facebook, LinkedIn)
+- Excellent Quiz & Assignment System
+- Course Search and Filter with Advanced Options
+- Instructor Dashboard with Earnings & Reports
+- Wishlist (save favorite courses)
+- File Attachments per lecture
+- Modern Lecture Page with Video/Text/Slides
+- Ratings & Reviews System ⭐
+- Blog Module (SEO ready)
+- Withdraw Earnings Module for Instructors
+- Student Discussions & Forums ⁉
+- Media Manager for Admin & Instructors
+- Dynamic Pages (CMS-style custom pages)
+- Cookie Notice for GDPR compliance
+- Student Course Progress Tracking
+- High Performance & Optimized for heavy data
+- Multi-Instructor Support (co-teaching)
 
-## Learning Laravel
+Boni LMS is accessible, powerful, and provides tools required for large, robust online academies.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Learning Boni LMS
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Boni LMS has comprehensive documentation and tutorials to get started quickly.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+For detailed guides, visit the [Boni LMS Documentation](https://bonilms.com/docs).
+
+You may also explore the [Installation Guide](https://bonilms.com/install), where you will be guided through setting up a modern Boni LMS instance.
+
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help with Laravel-specific tutorials.
 
 ## Laravel Sponsors
 
@@ -46,16 +65,16 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Thank you for considering contributing to the Boni LMS project! The contribution guide can be found in the [Boni LMS Documentation](https://bonilms.com/docs/contributions).
 
 ## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+In order to ensure that the Boni LMS community is welcoming to all, please review and abide by the [Code of Conduct](https://bonilms.com/docs/code-of-conduct).
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Boni LMS, please send an e-mail to the development team via [security@bonilms.com](mailto:security@bonilms.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Boni LMS is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
