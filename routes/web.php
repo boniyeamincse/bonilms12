@@ -131,7 +131,12 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
         });
     });
 
-    // Settings, CMS, Media, etc. - to be added later
+    // Settings
+    Route::get('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])->name('admin.settings');
+    Route::put('/settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])->name('admin.settings.update');
+    Route::get('/settings/group/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'getGroup'])->name('admin.settings.group');
+    Route::put('/settings/group/{group}', [\App\Http\Controllers\Admin\SettingsController::class, 'updateGroup'])->name('admin.settings.group.update');
+    Route::post('/settings/initialize', [\App\Http\Controllers\Admin\SettingsController::class, 'initializeDefaults'])->name('admin.settings.initialize');
 });
 
 // Dashboard API routes with role protection
@@ -152,6 +157,11 @@ Route::middleware(['auth', 'role:instructor'])->group(function () {
 
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('/api/dashboard/student/metrics', [StudentDashboardController::class, 'metrics']);
+});
+
+// Navigation menu API route
+Route::middleware(['auth'])->group(function () {
+    Route::get('/api/navigation/menu', [\App\Http\Controllers\NavigationController::class, 'getNavigationMenu']);
 });
 
 require __DIR__.'/auth.php';

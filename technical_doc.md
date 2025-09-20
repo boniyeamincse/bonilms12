@@ -1,165 +1,179 @@
-# Boni Security LMS -- Technical Documentation
+# BONI LMS - Technical Documentation
 
 ## Overview
+BONI LMS is a comprehensive Learning Management System built with Laravel 11 and React (Inertia.js). It provides a platform for instructors to create and sell courses, and for students to enroll and learn.
 
-Boni Security LMS is a powerful and easy-to-use Learning Management
-System built on **Laravel v12**.\
-It is designed for schools, coaching centers, individual instructors,
-and academies to create, manage, and sell courses online without coding.
-
-This documentation provides the technical requirements, modules, and
-features for developers to understand and work with the system.
-
-------------------------------------------------------------------------
-
-## Technical Requirements
+## Architecture
 
 ### Backend
-
--   **Framework**: Laravel v12 (Latest stable version)
--   **Language**: PHP 8.3+
--   **Database**: MySQL 8 / MariaDB 10.6+
--   **Caching**: Redis (optional but recommended for performance)
--   **Storage**: Local & Amazon S3 integration for file uploads
--   **Payment Gateways**: Stripe, PayPal, Bank Transfer, Offline
-    Payments
+- **Framework**: Laravel 11
+- **Database**: SQLite/MySQL/PostgreSQL
+- **Queue System**: Database queues
+- **Caching**: File/Redis cache with tagged caching
+- **Authentication**: Laravel Sanctum with role-based access control
+- **File Storage**: Local/S3 storage
 
 ### Frontend
-
--   **SPA Framework**: Vue.js 3 or React (integrated with Laravel)
--   **Styling**: TailwindCSS + Bootstrap 5 (hybrid usage)
--   **Authentication**: Laravel Breeze / Jetstream with Social Login
-    (Google, Facebook, LinkedIn)
--   **Responsive**: Mobile-first UI/UX design
-
-### Server Requirements
-
--   **Web Server**: Apache 2.4 / Nginx
--   **PHP Extensions**: BCMath, Ctype, Fileinfo, JSON, Mbstring,
-    OpenSSL, PDO, Tokenizer, XML, GD, Zip
--   **Operating System**: Linux (Ubuntu 22.04 LTS recommended)
--   **Minimum Hardware**: 4 vCPU, 8 GB RAM, 100 GB SSD
-
-------------------------------------------------------------------------
+- **Framework**: React with Inertia.js
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **State Management**: React hooks + Inertia props
 
 ## Core Features
 
--   Intuitive **Drag & Drop Course Builder**
--   Unlimited Categories & Subcategories
--   **Smart Installation Wizard**
--   **Drip Content** (scheduled release of lessons)
--   Course Preview before purchase
--   **Social Login** (Google, Facebook, LinkedIn)
--   Excellent Quiz & Assignment System
--   Course Search and Filter with Advanced Options
--   Instructor Dashboard with **Earnings & Reports**
--   Wishlist (save favorite courses)
--   File Attachments per lecture
--   Modern Lecture Page with Video/Text/Slides
--   Ratings & Reviews System ⭐
--   Blog Module (SEO ready)
--   Withdraw Earnings Module for Instructors
--   Student Discussions & Forums ⁉
--   Media Manager for Admin & Instructors
--   Dynamic Pages (CMS-style custom pages)
--   Cookie Notice for GDPR compliance
--   Student Course Progress Tracking
--   High Performance & Optimized for heavy data
--   Multi-Instructor Support (co-teaching)
+### 1. Settings Management
+- **Location**: `app/Http/Controllers/Admin/SettingsController.php`
+- **Features**:
+  - Site configuration (name, description, URL)
+  - Email settings (SMTP configuration)
+  - Payment gateway settings (Stripe, PayPal)
+  - S3 storage configuration
+  - Cache settings (driver, TTL)
+- **Caching**: Settings are cached for 1 hour using tagged cache
+- **Frontend**: Tabbed interface with form validation
 
-------------------------------------------------------------------------
+### 2. Performance Optimizations
+- **Caching**: Model-level caching for frequently accessed data
+- **Pagination**: All admin lists use pagination (10-20 items per page)
+- **Background Jobs**: Email notifications dispatched asynchronously
+- **Database Optimization**: Proper indexing and eager loading
 
-## Payment Integration
+### 3. Accessibility Features (WCAG AA)
+- **Skip Links**: Navigation shortcuts for screen readers
+- **ARIA Labels**: Proper labeling of interactive elements
+- **Keyboard Navigation**: Full keyboard accessibility
+- **Focus Management**: Visible focus indicators
+- **Semantic HTML**: Proper heading hierarchy and landmarks
 
--   **Stripe Payment Gateway**
--   **PayPal Integration**
--   **Bank Transfer**
--   **Offline Payment Support**
+### 4. Search Functionality
+- **Global Search**: Topbar search redirects to appropriate admin pages
+- **Backend Search**: Database queries with LIKE operators
+- **Context-Aware**: Different search behavior based on user role
 
-------------------------------------------------------------------------
+### 5. UI Components
+- **Empty States**: Contextual messages when no data exists
+- **Skeleton Loaders**: Loading states for better UX
+- **Toast Notifications**: Non-intrusive feedback messages
+- **Responsive Design**: Mobile-first approach
 
-## User Roles
+### 6. Testing
+- **Feature Tests**: Comprehensive admin feature testing
+- **Factories**: Model factories for test data generation
+- **Assertions**: Proper HTTP and database assertions
 
-### Admin
+## Database Schema
 
--   Manage the entire LMS platform
--   Approve/Block courses and users
--   Approve/Decline instructor withdrawals
--   Install/Uninstall plugins and themes
--   Manage categories and media files
--   Track global statistics and reports
+### Core Tables
+- `users` - User accounts with role relationships
+- `courses` - Course content and metadata
+- `enrollments` - Student-course relationships
+- `payments` - Transaction records
+- `settings` - Configuration key-value pairs
+- `categories` - Course categorization
+- `reviews` - Course ratings and feedback
 
-### Instructor
+### Key Relationships
+- User belongs to Role (admin/instructor/student)
+- Course belongs to User (instructor) and Category
+- Enrollment belongs to User and Course
+- Payment belongs to User and Course
 
--   Create courses, sections, lessons, and quizzes
--   Set free or paid course prices
--   Publish courses (with admin approval)
--   Earn money from student enrollments
--   Withdraw earnings
--   Track student progress & performance
+## API Endpoints
 
-### Student
+### Admin Settings
+```
+GET    /admin/settings              - View settings page
+PUT    /admin/settings              - Update all settings
+GET    /admin/settings/group/{group} - Get settings by group
+PUT    /admin/settings/group/{group} - Update settings by group
+POST   /admin/settings/initialize    - Initialize default settings
+```
 
--   Create account and enroll in courses
--   Browse and purchase free/paid courses
--   Start learning immediately after enrollment
--   Submit assignments, quizzes, and tasks
--   Get certification after course completion
+### Admin Management
+```
+GET    /admin/users                 - List users (with search)
+GET    /admin/courses               - List courses (with search)
+POST   /admin/courses/{id}/approve  - Approve course
+POST   /admin/courses/{id}/reject   - Reject course
+POST   /admin/users/{id}/block      - Block user
+POST   /admin/users/{id}/unblock    - Unblock user
+```
 
-------------------------------------------------------------------------
+## Key Components
 
-## Advanced Features
+### Backend Components
+- `SettingsController` - Settings management
+- `AdminController` - Admin dashboard and operations
+- `Setting` model - Cached configuration management
+- `SendCourseApprovedEmail` job - Async email notifications
 
--   **Drip Content Scheduler**: Release course modules step-by-step
--   **Attachments**: Upload and attach files to lessons
--   **Assignments**: Allow instructors to assign and evaluate tasks
--   **Student Progress Reports**
--   **Smart Ratings and Reviews System**
--   **Personalized Media Manager**: Centralized file management
--   **Heavy Data Support**: Optimized database queries for thousands of
-    courses and users
+### Frontend Components
+- `AuthenticatedLayout` - Main layout with accessibility features
+- `Settings/Index` - Settings management interface
+- `EmptyState` - Reusable empty state component
+- `SkeletonLoader` - Loading state components
+- `Toast` - Notification system
 
-------------------------------------------------------------------------
+## Performance Considerations
 
-## Developer Notes
+### Caching Strategy
+- **Settings**: 1-hour cache with automatic invalidation on updates
+- **Course Lists**: Tagged caching for featured/popular courses
+- **Database Queries**: Proper indexing and eager loading
 
--   Modular structure for future scalability
--   API-ready for mobile app integration
--   Optimized for **SEO and Performance**
--   Uses **Queue System** for email, notifications, and background jobs
--   Laravel Horizon for monitoring queues
+### Queue Configuration
+- **Driver**: Database (configurable to Redis/SQS)
+- **Jobs**: Email notifications, heavy processing tasks
+- **Monitoring**: Failed job tracking
 
-------------------------------------------------------------------------
+### Optimization Techniques
+- **Pagination**: Prevents large dataset loading
+- **Lazy Loading**: Relationships loaded on demand
+- **Asset Optimization**: Vite bundling with code splitting
 
-## File Structure (Simplified)
+## Security Features
 
-    /boni-security-lms
-    │── app
-    │   ├── Models
-    │   ├── Http
-    │   ├── Providers
-    │── bootstrap
-    │── config
-    │── database
-    │── public
-    │── resources
-    │   ├── js (Vue/React components)
-    │   ├── sass (Tailwind + Bootstrap)
-    │   ├── views (Blade templates)
-    │── routes
-    │   ├── web.php
-    │   ├── api.php
-    │── storage
-    │── tests
-    │── vendor
+### Authentication & Authorization
+- **Middleware**: Role-based access control
+- **CSRF Protection**: Laravel's built-in CSRF tokens
+- **Input Validation**: Comprehensive request validation
 
-------------------------------------------------------------------------
+### Data Protection
+- **Mass Assignment Protection**: Fillable attributes
+- **SQL Injection Prevention**: Eloquent ORM
+- **XSS Protection**: Blade templating and React sanitization
 
-## Conclusion
+## Development Guidelines
 
-Boni Security LMS is a **full-featured, scalable, and secure** Learning
-Management System built on Laravel.\
-It provides all the modules and integrations required to run a
-professional online academy similar to Udemy or LinkedIn Learning.
+### Code Style
+- **PHP**: PSR-12 standards
+- **JavaScript**: ESLint configuration
+- **Commits**: Conventional commit messages
 
-------------------------------------------------------------------------
+### Testing
+- **Coverage**: Feature tests for critical paths
+- **Factories**: Consistent test data generation
+- **Assertions**: Meaningful test assertions
+
+### Deployment
+- **Environment**: Separate configs for dev/staging/prod
+- **Migrations**: Database versioning
+- **Assets**: Compiled and versioned
+
+## Future Enhancements
+
+### Potential Features
+- Real-time notifications with WebSockets
+- Advanced analytics dashboard
+- Mobile app development
+- Multi-language support
+- Advanced course builder
+- Integration APIs (Zoom, Google Classroom)
+
+### Performance Improvements
+- Redis clustering
+- CDN integration
+- Database read replicas
+- Horizontal scaling setup
+
+This documentation provides a comprehensive overview of the BONI LMS system architecture, features, and development practices.

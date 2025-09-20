@@ -27,21 +27,48 @@ class AdminController extends Controller
         ]);
     }
 
-    public function users()
+    public function users(Request $request)
     {
-        $users = \App\Models\User::with('role')->paginate(10);
+        $query = \App\Models\User::with('role');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
+
+        $users = $query->paginate(10)->appends($request->query());
         return inertia('Admin/Users/Index', compact('users'));
     }
 
-    public function courses()
+    public function courses(Request $request)
     {
-        $courses = \App\Models\Course::with('instructor')->paginate(10);
+        $query = \App\Models\Course::with('instructor');
+
+        if ($request->has('search') && !empty($request->search)) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhereHas('instructor', function($q) use ($search) {
+                      $q->where('name', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        $courses = $query->paginate(10)->appends($request->query());
         return inertia('Admin/Courses/Index', compact('courses'));
     }
 
     public function approveCourse(\App\Models\Course $course)
     {
         $course->update(['status' => 'published']);
+
+        // Dispatch background job to send approval email
+        \App\Jobs\SendCourseApprovedEmail::dispatch($course);
+
         return back()->with('success', 'Course approved successfully.');
     }
 
