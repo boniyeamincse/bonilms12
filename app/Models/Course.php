@@ -72,6 +72,10 @@ class Course extends Model
     {
         return $this->belongsTo(Category::class);
     }
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
+    }
 
     public static function getFeaturedCourses()
     {

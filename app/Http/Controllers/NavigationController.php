@@ -14,33 +14,176 @@ class NavigationController extends Controller
         $user = Auth::user();
         $userRole = $user->role->name ?? 'student';
 
-        // For now, we'll use role-based menu locations
-        // In a more advanced system, you might have specific menu slugs per role
-        $menuLocation = $userRole . '_navigation';
-
-        $menu = Menu::active()
-            ->byLocation($menuLocation)
-            ->with(['items' => function($query) {
-                $query->with('children')
-                    ->topLevel()
-                    ->ordered();
-            }])
-            ->first();
+        // Check if user is in course management
+        $currentPath = $request->path();
+        $isCourseManagement = str_contains($currentPath, '/instructor/courses/') && $userRole === 'instructor';
 
         $navigationItems = [];
 
-        if ($menu) {
-            // Build hierarchical menu structure
-            $navigationItems = $this->buildMenuItems($menu->items);
+        if ($isCourseManagement) {
+            // Extract course ID from URL
+            preg_match('/\/instructor\/courses\/(\d+)/', $currentPath, $matches);
+            $courseId = $matches[1] ?? null;
+
+            if ($courseId) {
+                $navigationItems = $this->getCourseManagementNavigation($courseId);
+            } else {
+                // Fallback to instructor navigation
+                $navigationItems = $this->getFallbackNavigation($userRole);
+            }
         } else {
-            // Fallback to hardcoded menus if no database menu exists
-            $navigationItems = $this->getFallbackNavigation($userRole);
+            // For now, we'll use role-based menu locations
+            // In a more advanced system, you might have specific menu slugs per role
+            $menuLocation = $userRole . '_navigation';
+
+            $menu = Menu::active()
+                ->byLocation($menuLocation)
+                ->with(['items' => function($query) {
+                    $query->with('children')
+                        ->topLevel()
+                        ->ordered();
+                }])
+                ->first();
+
+            if ($menu) {
+                // Build hierarchical menu structure
+                $navigationItems = $this->buildMenuItems($menu->items);
+            } else {
+                // Fallback to hardcoded menus if no database menu exists
+                $navigationItems = $this->getFallbackNavigation($userRole);
+            }
         }
 
         return response()->json([
             'navigation' => $navigationItems,
             'user_role' => $userRole
         ]);
+    }
+
+    private function getCourseManagementNavigation($courseId)
+    {
+        return [
+            [
+                'id' => 'course_overview',
+                'title' => 'Course Overview',
+                'url' => "/instructor/courses/{$courseId}/overview",
+                'icon' => 'BookOpen',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'curriculum',
+                'title' => 'Curriculum / Lectures',
+                'url' => "/instructor/courses/{$courseId}/curriculum",
+                'icon' => 'Play',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'quizzes_assignments',
+                'title' => 'Quizzes & Assignments',
+                'url' => "/instructor/courses/{$courseId}/quizzes",
+                'icon' => 'FileText',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'pricing_coupons',
+                'title' => 'Course Pricing & Coupons',
+                'url' => "/instructor/courses/{$courseId}/pricing",
+                'icon' => 'CreditCard',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'drip_content',
+                'title' => 'Drip Content & Scheduling',
+                'url' => "/instructor/courses/{$courseId}/drip-content",
+                'icon' => 'Clock',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'discussions',
+                'title' => 'Discussions & Q&A',
+                'url' => "/instructor/courses/{$courseId}/discussions",
+                'icon' => 'MessageCircle',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'reviews_ratings',
+                'title' => 'Reviews & Ratings',
+                'url' => "/instructor/courses/{$courseId}/reviews",
+                'icon' => 'Star',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'enrollments',
+                'title' => 'Enrollments',
+                'url' => "/instructor/courses/{$courseId}/enrollments",
+                'icon' => 'Users',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'certificates',
+                'title' => 'Certificates',
+                'url' => "/instructor/courses/{$courseId}/certificates",
+                'icon' => 'Award',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'earnings_reports',
+                'title' => 'Earnings & Reports',
+                'url' => "/instructor/courses/{$courseId}/earnings",
+                'icon' => 'TrendingUp',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'settings',
+                'title' => 'Settings',
+                'url' => "/instructor/courses/{$courseId}/settings",
+                'icon' => 'Settings',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+            [
+                'id' => 'publish_approvals',
+                'title' => 'Publish & Approvals',
+                'url' => "/instructor/courses/{$courseId}/publish",
+                'icon' => 'CheckCircle',
+                'has_children' => false,
+                'children' => [],
+                'is_active' => true,
+                'css_class' => '',
+            ],
+        ];
     }
 
     private function buildMenuItems($items)

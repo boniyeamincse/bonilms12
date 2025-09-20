@@ -151,7 +151,40 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/api/admin/withdrawals/{withdrawal}/decline', [AdminDashboardController::class, 'declineWithdrawal']);
 });
 
-Route::middleware(['auth', 'role:instructor'])->group(function () {
+Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->group(function () {
+    // Course Management
+    Route::prefix('courses/{courseId}')->group(function () {
+        Route::get('/', [App\Http\Controllers\Instructor\CourseManagementController::class, 'index'])->name('instructor.courses.manage');
+        Route::put('/', [App\Http\Controllers\Instructor\CourseManagementController::class, 'update'])->name('instructor.courses.update');
+        Route::get('/overview', [App\Http\Controllers\Instructor\CourseManagementController::class, 'overview'])->name('instructor.courses.overview');
+        Route::get('/curriculum', [App\Http\Controllers\Instructor\CourseManagementController::class, 'curriculum'])->name('instructor.courses.curriculum');
+
+        // Sections CRUD
+        Route::post('/sections', [App\Http\Controllers\Instructor\CourseManagementController::class, 'storeSection'])->name('instructor.courses.sections.store');
+        Route::put('/sections/{sectionId}', [App\Http\Controllers\Instructor\CourseManagementController::class, 'updateSection'])->name('instructor.courses.sections.update');
+        Route::delete('/sections/{sectionId}', [App\Http\Controllers\Instructor\CourseManagementController::class, 'deleteSection'])->name('instructor.courses.sections.delete');
+
+        // Lectures CRUD
+        Route::post('/sections/{sectionId}/lectures', [App\Http\Controllers\Instructor\CourseManagementController::class, 'storeLecture'])->name('instructor.courses.lectures.store');
+        Route::put('/sections/{sectionId}/lectures/{lectureId}', [App\Http\Controllers\Instructor\CourseManagementController::class, 'updateLecture'])->name('instructor.courses.lectures.update');
+        Route::delete('/sections/{sectionId}/lectures/{lectureId}', [App\Http\Controllers\Instructor\CourseManagementController::class, 'deleteLecture'])->name('instructor.courses.lectures.delete');
+        Route::get('/quizzes', [App\Http\Controllers\Instructor\CourseManagementController::class, 'quizzes'])->name('instructor.courses.quizzes');
+        Route::get('/assignments', [App\Http\Controllers\Instructor\CourseManagementController::class, 'assignments'])->name('instructor.courses.assignments');
+        Route::get('/pricing', [App\Http\Controllers\Instructor\CourseManagementController::class, 'pricing'])->name('instructor.courses.pricing');
+        Route::put('/pricing', [App\Http\Controllers\Instructor\CourseManagementController::class, 'updatePricing'])->name('instructor.courses.pricing.update');
+        Route::get('/drip-content', [App\Http\Controllers\Instructor\CourseManagementController::class, 'dripContent'])->name('instructor.courses.drip-content');
+        Route::get('/discussions', [App\Http\Controllers\Instructor\CourseManagementController::class, 'discussions'])->name('instructor.courses.discussions');
+        Route::get('/reviews', [App\Http\Controllers\Instructor\CourseManagementController::class, 'reviews'])->name('instructor.courses.reviews');
+        Route::get('/enrollments', [App\Http\Controllers\Instructor\CourseManagementController::class, 'enrollments'])->name('instructor.courses.enrollments');
+        Route::get('/enrollments/export', [App\Http\Controllers\Instructor\CourseManagementController::class, 'exportEnrollments'])->name('instructor.courses.enrollments.export');
+        Route::get('/certificates', [App\Http\Controllers\Instructor\CourseManagementController::class, 'certificates'])->name('instructor.courses.certificates');
+        Route::post('/enrollments/{enrollmentId}/certificates', [App\Http\Controllers\Instructor\CourseManagementController::class, 'generateCertificate'])->name('instructor.courses.certificates.generate');
+        Route::get('/certificates/{certificateId}/download', [App\Http\Controllers\Instructor\CourseManagementController::class, 'downloadCertificate'])->name('instructor.courses.certificates.download');
+        Route::get('/earnings', [App\Http\Controllers\Instructor\CourseManagementController::class, 'earnings'])->name('instructor.courses.earnings');
+        Route::get('/settings', [App\Http\Controllers\Instructor\CourseManagementController::class, 'settings'])->name('instructor.courses.settings');
+        Route::get('/publish', [App\Http\Controllers\Instructor\CourseManagementController::class, 'publish'])->name('instructor.courses.publish');
+    });
+
     Route::get('/api/dashboard/instructor/metrics', [InstructorDashboardController::class, 'metrics']);
 });
 

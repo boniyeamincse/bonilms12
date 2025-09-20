@@ -12,16 +12,26 @@ class Enrollment extends Model
         'enrolled_at',
         'completed_at',
         'progress',
+        'completion_percentage',
+        'grade',
     ];
 
     protected $casts = [
         'enrolled_at' => 'datetime',
         'completed_at' => 'datetime',
+        'progress' => 'array',
+        'completion_percentage' => 'decimal:2',
+        'grade' => 'decimal:2',
     ];
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function certificate()
+    {
+        return $this->hasOne(Certificate::class);
     }
 
     public function course()
