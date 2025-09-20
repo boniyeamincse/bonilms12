@@ -11,7 +11,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                     <div className="flex justify-between items-center h-16">
                         {/* Logo */}
                         <div className="flex-shrink-0">
-                            <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-blue to-primary-green bg-clip-text text-transparent">
+                            <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
                                 BoniLMS
                             </Link>
                         </div>
@@ -56,20 +56,20 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
             </header>
 
             {/* Hero Section */}
-            <section className="bg-gradient-to-r from-primary-blue/10 to-primary-green/10 py-20">
+            <section className="bg-gradient-to-r from-blue-600/10 to-green-600/10 py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center">
                         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-                            Learn Anytime, <span className="bg-gradient-to-r from-primary-blue to-primary-green bg-clip-text text-transparent">Anywhere</span>
+                            Learn Anytime, <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">Anywhere</span>
                         </h1>
                         <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
                             Join thousands of students & instructors worldwide. Access quality education from the comfort of your home.
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button className="bg-gradient-to-r from-primary-blue to-primary-green text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+                            <button className="bg-gradient-to-r from-blue-600 to-green-600 text-white px-8 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
                                 Browse Courses
                             </button>
-                            <button className="border-2 border-primary-blue text-primary-blue px-8 py-3 rounded-lg font-semibold hover:bg-primary-blue hover:text-white transition-colors">
+                            <button className="border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-600 hover:text-white transition-colors">
                                 Become an Instructor
                             </button>
                         </div>
@@ -77,7 +77,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                 </div>
                 {/* Hero Image Placeholder */}
                 <div className="mt-12 max-w-4xl mx-auto">
-                    <div className="bg-gradient-to-r from-primary-blue to-primary-green h-64 rounded-lg opacity-20"></div>
+                    <div className="bg-gradient-to-r from-blue-600 to-green-600 h-64 rounded-lg opacity-20"></div>
                 </div>
             </section>
 
@@ -115,7 +115,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[1, 2, 3].map((course) => (
                             <div key={course} className="bg-white dark:bg-gray-900 rounded-lg shadow-lg overflow-hidden">
-                                <div className="h-48 bg-gradient-to-r from-primary-blue to-primary-green"></div>
+                                <div className="h-48 bg-gradient-to-r from-blue-600 to-green-600"></div>
                                 <div className="p-6">
                                     <div className="flex items-center mb-2">
                                         <span className="bg-primary-green text-white px-2 py-1 rounded text-sm">Featured</span>
@@ -256,7 +256,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         {[1, 2, 3].map((testimonial) => (
                             <div key={testimonial} className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg">
                                 <div className="flex items-center mb-4">
-                                    <div className="w-12 h-12 bg-gradient-to-r from-primary-blue to-primary-green rounded-full flex items-center justify-center mr-4">
+                                    <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-green-600 rounded-full flex items-center justify-center mr-4">
                                         <span className="text-white font-bold">S{testimonial}</span>
                                     </div>
                                     <div>

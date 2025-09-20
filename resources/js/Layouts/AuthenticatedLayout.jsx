@@ -5,6 +5,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import ThemeToggle from '@/Components/ThemeToggle';
 import { Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { Search, BarChart3, Users, BookOpen, CreditCard, TrendingUp, Settings, GraduationCap, DollarSign, PieChart, Heart, Award } from 'lucide-react';
 
 export default function AuthenticatedLayout({ header, children }) {
     const user = usePage().props.auth.user;
@@ -16,28 +17,28 @@ export default function AuthenticatedLayout({ header, children }) {
     // Define navigation items based on user role
     const getNavigationItems = () => {
         const commonItems = [
-            { href: route('dashboard'), label: 'Dashboard', icon: '📊' },
+            { href: route('dashboard'), label: 'Dashboard', icon: BarChart3 },
         ];
 
         const roleSpecificItems = {
             admin: [
-                { href: '/admin/users', label: 'Users', icon: '👥' },
-                { href: '/admin/courses', label: 'Courses', icon: '📚' },
-                { href: '/admin/payments', label: 'Payments', icon: '💰' },
-                { href: '/admin/reports', label: 'Reports', icon: '📈' },
-                { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
+                { href: '/admin/users', label: 'Users', icon: Users },
+                { href: '/admin/courses', label: 'Courses', icon: BookOpen },
+                { href: '/admin/payments', label: 'Payments', icon: CreditCard },
+                { href: '/admin/reports', label: 'Reports', icon: TrendingUp },
+                { href: '/admin/settings', label: 'Settings', icon: Settings },
             ],
             instructor: [
-                { href: '/instructor/courses', label: 'My Courses', icon: '📚' },
-                { href: '/instructor/students', label: 'Students', icon: '👨‍🎓' },
-                { href: '/instructor/earnings', label: 'Earnings', icon: '💰' },
-                { href: '/instructor/analytics', label: 'Analytics', icon: '📊' },
+                { href: '/instructor/courses', label: 'My Courses', icon: BookOpen },
+                { href: '/instructor/students', label: 'Students', icon: GraduationCap },
+                { href: '/instructor/earnings', label: 'Earnings', icon: DollarSign },
+                { href: '/instructor/analytics', label: 'Analytics', icon: PieChart },
             ],
             student: [
-                { href: '/student/courses', label: 'My Courses', icon: '📚' },
-                { href: '/student/progress', label: 'Progress', icon: '📈' },
-                { href: '/student/certificates', label: 'Certificates', icon: '🏆' },
-                { href: '/student/wishlist', label: 'Wishlist', icon: '❤️' },
+                { href: '/student/courses', label: 'My Courses', icon: BookOpen },
+                { href: '/student/progress', label: 'Progress', icon: TrendingUp },
+                { href: '/student/certificates', label: 'Certificates', icon: Award },
+                { href: '/student/wishlist', label: 'Wishlist', icon: Heart },
             ],
         };
 
@@ -66,7 +67,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                     active={route().current(item.href.replace('/', '').replace('/', '.'))}
                                     className="group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                                 >
-                                    <span className="mr-3">{item.icon}</span>
+                                    <item.icon className="mr-3 h-5 w-5" />
                                     {item.label}
                                 </NavLink>
                             ))}
@@ -106,6 +107,20 @@ export default function AuthenticatedLayout({ header, children }) {
                             )}
                         </div>
                         <div className="ml-4 flex items-center md:ml-6">
+                            {/* Search */}
+                            <div className="hidden md:block">
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <Search className="h-5 w-5 text-gray-400" />
+                                    </div>
+                                    <input
+                                        type="text"
+                                        placeholder="Search courses, students..."
+                                        className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white dark:bg-gray-800 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    />
+                                </div>
+                            </div>
+
                             {/* Theme Toggle */}
                             <ThemeToggle />
 
@@ -170,7 +185,7 @@ export default function AuthenticatedLayout({ header, children }) {
                                         active={route().current(item.href.replace('/', '').replace('/', '.'))}
                                         onClick={() => setShowingNavigationDropdown(false)}
                                     >
-                                        <span className="mr-3">{item.icon}</span>
+                                        <item.icon className="mr-3 h-5 w-5" />
                                         {item.label}
                                     </ResponsiveNavLink>
                                 ))}

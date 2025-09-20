@@ -13,6 +13,11 @@ class AdminDashboardController extends Controller
 {
     public function metrics()
     {
+        \Log::info('AdminDashboardController metrics called', [
+            'user_id' => auth()->id(),
+            'user_name' => auth()->user()->name ?? 'unknown'
+        ]);
+
         // Total revenue from successful payments
         $totalRevenue = Payment::where('status', 'completed')->sum('amount');
 

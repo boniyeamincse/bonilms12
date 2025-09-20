@@ -18,8 +18,19 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    $user = auth()->user();
+    \Log::info('Dashboard accessed by user', [
+        'user_id' => $user->id,
+        'user_name' => $user->name,
+        'user_email' => $user->email,
+        'role_id' => $user->role_id,
+        'role_name' => $user->role ? $user->role->name : 'no role'
+    ]);
+
+    return Inertia::render('Dashboard', [
+        'user' => $user->load('role')
+    ]);
+})->middleware(['auth'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
