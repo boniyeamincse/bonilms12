@@ -41,6 +41,36 @@ class AdminDashboardController extends Controller
         $totalInstructors = User::where('role_id', \App\Models\Role::where('name', 'instructor')->first()->id)->count();
         $recentEnrollments = Enrollment::with(['user', 'course'])->latest()->take(5)->get();
 
+        // Chart data - payments over last 30 days
+        $paymentsChart = Payment::selectRaw('DATE(created_at) as date, SUM(amount) as revenue')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->where('status', 'completed')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('revenue', 'date');
+
+        // Enrollments trend
+        $enrollmentsChart = Enrollment::selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('count', 'date');
+
+        // Top categories by revenue
+        $topCategories = Course::join('payments', 'courses.id', '=', 'payments.course_id')
+            ->join('categories', 'courses.category_id', '=', 'categories.id')
+            ->selectRaw('categories.name, SUM(payments.amount) as revenue')
+            ->where('payments.status', 'completed')
+            ->groupBy('categories.id', 'categories.name')
+            ->orderBy('revenue', 'desc')
+            ->take(5)
+            ->get();
+
+        // Count pending withdrawals
+        $pendingWithdrawals = \App\Models\Withdrawal::where('status', 'pending')->count();
+
         return response()->json([
             'total_revenue' => $totalRevenue,
             'total_enrollments' => $totalEnrollments,
@@ -48,7 +78,75 @@ class AdminDashboardController extends Controller
             'instructor_payouts' => $instructorPayouts,
             'total_courses' => $totalCourses,
             'total_instructors' => $totalInstructors,
+            'pending_courses' => \App\Models\Course::where('status', 'pending')->count(),
+            'pending_withdrawals' => $pendingWithdrawals,
             'recent_enrollments' => $recentEnrollments,
+            'charts' => [
+                'payments' => $paymentsChart,
+                'enrollments' => $enrollmentsChart,
+                'top_categories' => $topCategories,
+            ],
         ]);
+    }
+
+    public function getCourses(Request $request)
+    {
+        $query = Course::with(['instructor', 'category']);
+
+        if ($request->has('status') && $request->status) {
+            $query->where('status', $request->status);
+        }
+
+        $courses = $query->paginate(10);
+
+        return response()->json($courses);
+    }
+
+    public function approveCourse(Course $course)
+    {
+        $course->update(['status' => 'published']);
+        return response()->json(['message' => 'Course approved successfully']);
+    }
+
+    public function rejectCourse(Course $course)
+    {
+        $course->update(['status' => 'rejected']);
+        return response()->json(['message' => 'Course rejected']);
+    }
+
+    public function getPayments(Request $request)
+    {
+        $query = Payment::with(['user', 'course']);
+
+        if ($request->has('from') && $request->to) {
+            $query->whereBetween('created_at', [$request->from, $request->to]);
+        }
+
+        $payments = $query->paginate(10);
+        return response()->json($payments);
+    }
+
+    public function getWithdrawals(Request $request)
+    {
+        $query = \App\Models\Withdrawal::with('instructor');
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $withdrawals = $query->paginate(10);
+        return response()->json($withdrawals);
+    }
+
+    public function approveWithdrawal(\App\Models\Withdrawal $withdrawal)
+    {
+        $withdrawal->update(['status' => 'approved', 'processed_at' => now()]);
+        return response()->json(['message' => 'Withdrawal approved']);
+    }
+
+    public function declineWithdrawal(\App\Models\Withdrawal $withdrawal)
+    {
+        $withdrawal->update(['status' => 'declined']);
+        return response()->json(['message' => 'Withdrawal declined']);
     }
 }
