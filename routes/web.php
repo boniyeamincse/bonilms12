@@ -41,33 +41,33 @@ Route::middleware('auth')->group(function () {
 // Admin routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
     // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'dashboard'])->name('admin.dashboard');
 
     // Users management
-    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
-    Route::post('/users/{user}/block', [AdminController::class, 'blockUser'])->name('admin.users.block');
-    Route::post('/users/{user}/unblock', [AdminController::class, 'unblockUser'])->name('admin.users.unblock');
+    Route::get('/users', [\App\Http\Controllers\AdminController::class, 'users'])->name('admin.users');
+    Route::post('/users/{user}/block', [\App\Http\Controllers\AdminController::class, 'blockUser'])->name('admin.users.block');
+    Route::post('/users/{user}/unblock', [\App\Http\Controllers\AdminController::class, 'unblockUser'])->name('admin.users.unblock');
 
     // Courses management
-    Route::get('/courses', [AdminController::class, 'courses'])->name('admin.courses');
-    Route::post('/courses/{course}/approve', [AdminController::class, 'approveCourse'])->name('admin.courses.approve');
-    Route::post('/courses/{course}/reject', [AdminController::class, 'rejectCourse'])->name('admin.courses.reject');
+    Route::get('/courses', [\App\Http\Controllers\AdminController::class, 'courses'])->name('admin.courses');
+    Route::post('/courses/{course}/approve', [\App\Http\Controllers\AdminController::class, 'approveCourse'])->name('admin.courses.approve');
+    Route::post('/courses/{course}/reject', [\App\Http\Controllers\AdminController::class, 'rejectCourse'])->name('admin.courses.reject');
 
     // Categories
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class, ['as' => 'admin']);
 
     // Payments
-    Route::get('/payments', [AdminController::class, 'payments'])->name('admin.payments');
-    Route::post('/payments/{payment}/refund', [AdminController::class, 'refundPayment'])->name('admin.payments.refund');
+    Route::get('/payments', [\App\Http\Controllers\AdminController::class, 'payments'])->name('admin.payments');
+    Route::post('/payments/{payment}/refund', [\App\Http\Controllers\AdminController::class, 'refundPayment'])->name('admin.payments.refund');
 
     // Withdrawals
-    Route::get('/withdrawals', [AdminController::class, 'withdrawals'])->name('admin.withdrawals');
-    Route::post('/withdrawals/{withdrawal}/approve', [AdminController::class, 'approveWithdrawal'])->name('admin.withdrawals.approve');
-    Route::post('/withdrawals/{withdrawal}/decline', [AdminController::class, 'declineWithdrawal'])->name('admin.withdrawals.decline');
+    Route::get('/withdrawals', [\App\Http\Controllers\AdminController::class, 'withdrawals'])->name('admin.withdrawals');
+    Route::post('/withdrawals/{withdrawal}/approve', [\App\Http\Controllers\AdminController::class, 'approveWithdrawal'])->name('admin.withdrawals.approve');
+    Route::post('/withdrawals/{withdrawal}/decline', [\App\Http\Controllers\AdminController::class, 'declineWithdrawal'])->name('admin.withdrawals.decline');
 
     // Queues
-    Route::get('/queues/course-reviews', [AdminController::class, 'courseReviewsQueue'])->name('admin.queues.course-reviews');
-    Route::get('/queues/withdrawals', [AdminController::class, 'withdrawalsQueue'])->name('admin.queues.withdrawals');
+    Route::get('/queues/course-reviews', [\App\Http\Controllers\AdminController::class, 'courseReviewsQueue'])->name('admin.queues.course-reviews');
+    Route::get('/queues/withdrawals', [\App\Http\Controllers\AdminController::class, 'withdrawalsQueue'])->name('admin.queues.withdrawals');
 
     // Media Manager
     Route::resource('media', \App\Http\Controllers\Admin\MediaController::class, ['as' => 'admin']);
@@ -141,17 +141,21 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->group(function () {
 
 // Dashboard API routes with role protection
 Route::middleware(['auth', 'role:admin'])->group(function () {
-    Route::get('/api/dashboard/admin/metrics', [AdminDashboardController::class, 'metrics']);
-    Route::get('/api/admin/courses', [AdminDashboardController::class, 'getCourses']);
-    Route::post('/api/admin/courses/{course}/approve', [AdminDashboardController::class, 'approveCourse']);
-    Route::post('/api/admin/courses/{course}/reject', [AdminDashboardController::class, 'rejectCourse']);
-    Route::get('/api/admin/payments', [AdminDashboardController::class, 'getPayments']);
-    Route::get('/api/admin/withdrawals', [AdminDashboardController::class, 'getWithdrawals']);
-    Route::post('/api/admin/withdrawals/{withdrawal}/approve', [AdminDashboardController::class, 'approveWithdrawal']);
-    Route::post('/api/admin/withdrawals/{withdrawal}/decline', [AdminDashboardController::class, 'declineWithdrawal']);
+    Route::get('/api/dashboard/admin/metrics', [\App\Http\Controllers\AdminDashboardController::class, 'metrics']);
+    Route::get('/api/admin/courses', [\App\Http\Controllers\AdminDashboardController::class, 'getCourses']);
+    Route::post('/api/admin/courses/{course}/approve', [\App\Http\Controllers\AdminDashboardController::class, 'approveCourse']);
+    Route::post('/api/admin/courses/{course}/reject', [\App\Http\Controllers\AdminDashboardController::class, 'rejectCourse']);
+    Route::get('/api/admin/payments', [\App\Http\Controllers\AdminDashboardController::class, 'getPayments']);
+    Route::get('/api/admin/withdrawals', [\App\Http\Controllers\AdminDashboardController::class, 'getWithdrawals']);
+    Route::post('/api/admin/withdrawals/{withdrawal}/approve', [\App\Http\Controllers\AdminDashboardController::class, 'approveWithdrawal']);
+    Route::post('/api/admin/withdrawals/{withdrawal}/decline', [\App\Http\Controllers\AdminDashboardController::class, 'declineWithdrawal']);
 });
 
 Route::middleware(['auth', 'role:instructor'])->prefix('instructor')->group(function () {
+    // Courses Management
+    Route::resource('courses', \App\Http\Controllers\Instructor\CourseController::class, ['as' => 'instructor'])->except(['show']);
+    Route::get('/courses/draft', [\App\Http\Controllers\Instructor\CourseController::class, 'draft'])->name('instructor.courses.draft');
+
     // Course Management
     Route::prefix('courses/{courseId}')->group(function () {
         Route::get('/', [App\Http\Controllers\Instructor\CourseManagementController::class, 'index'])->name('instructor.courses.manage');

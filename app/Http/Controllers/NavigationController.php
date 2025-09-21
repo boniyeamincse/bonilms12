@@ -353,7 +353,7 @@ class NavigationController extends Controller
             'instructor' => [
                 [
                     'id' => 'courses',
-                    'title' => 'My Courses',
+                    'title' => 'Course Modules',
                     'url' => '/instructor/courses',
                     'icon' => 'BookOpen',
                     'has_children' => true,
@@ -370,7 +370,7 @@ class NavigationController extends Controller
                         ],
                         [
                             'id' => 'create_course',
-                            'title' => 'Create Course',
+                            'title' => 'Add Course',
                             'url' => '/instructor/courses/create',
                             'icon' => 'Plus',
                             'has_children' => false,
@@ -381,7 +381,7 @@ class NavigationController extends Controller
                         [
                             'id' => 'draft_courses',
                             'title' => 'Draft Courses',
-                            'url' => '/instructor/courses?status=draft',
+                            'url' => '/instructor/courses/draft',
                             'icon' => 'FileText',
                             'has_children' => false,
                             'children' => [],
